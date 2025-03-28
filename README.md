@@ -9,7 +9,7 @@ A WordPress plugin for tracking user clickstream data.
 - Git
 
 ### Quick Start
-1. Clone this repository
+1. Clone this repository: `git clone git@github.com:build-stack/clickstream-wp.git`
 2. Run `chmod +x generate-config-keys.sh && ./generate-config-keys.sh` to generate secure WordPress salt keys
 3. Run `docker-compose up -d`
 4. Access WordPress at http://localhost:8000
