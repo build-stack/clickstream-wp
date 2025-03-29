@@ -8,9 +8,10 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Register the admin menu page
+ * Register the admin menu page and submenus
  */
 function clickstream_wp_register_admin_page() {
+    // Add main menu
     add_menu_page(
         'Clickstream WP',
         'Clickstream',
@@ -20,6 +21,34 @@ function clickstream_wp_register_admin_page() {
         'dashicons-chart-line',
         30
     );
+    
+    // Add submenu items
+    add_submenu_page(
+        'clickstream-wp',
+        'Dashboard',
+        'Dashboard',
+        'manage_options',
+        'clickstream-wp',
+        'clickstream_wp_render_admin_page'
+    );
+    
+    add_submenu_page(
+        'clickstream-wp',
+        'Setup',
+        'Setup',
+        'manage_options',
+        'clickstream-wp-setup',
+        'clickstream_wp_render_admin_page'
+    );
+    
+    add_submenu_page(
+        'clickstream-wp',
+        'Privacy',
+        'Privacy',
+        'manage_options',
+        'clickstream-wp-privacy',
+        'clickstream_wp_render_admin_page'
+    );
 }
 add_action('admin_menu', 'clickstream_wp_register_admin_page');
 
@@ -28,7 +57,11 @@ add_action('admin_menu', 'clickstream_wp_register_admin_page');
  */
 function clickstream_wp_enqueue_admin_assets() {
     $screen = get_current_screen();
-    if ($screen->id !== 'toplevel_page_clickstream-wp') {
+    if (!in_array($screen->id, array(
+        'toplevel_page_clickstream-wp',
+        'clickstream_page_clickstream-wp-setup',
+        'clickstream_page_clickstream-wp-privacy'
+    ))) {
         return;
     }
 
@@ -66,6 +99,7 @@ function clickstream_wp_enqueue_admin_assets() {
     wp_localize_script('clickstream-wp-admin', 'clickstreamWPAdmin', array(
         'apiNonce' => wp_create_nonce('wp_rest'),
         'apiUrl' => rest_url('clickstream-wp/v1'),
+        'currentPage' => str_replace('clickstream-wp-', '', $_GET['page']),
     ));
 }
 add_action('admin_enqueue_scripts', 'clickstream_wp_enqueue_admin_assets');

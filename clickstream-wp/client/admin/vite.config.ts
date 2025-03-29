@@ -13,16 +13,22 @@ export default defineConfig({
     rollupOptions: {
       input: 'src/main.tsx',
       output: {
-        entryFileNames: 'js/[name]-[hash].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        assetFileNames: 'css/[name]-[hash].[ext]'
+        // Keep the directory structure consistent
+        entryFileNames: 'js/[name].[hash].js',
+        chunkFileNames: 'js/chunks/[name].[hash].js',
+        assetFileNames: ({name}) => {
+          if (/\.css$/.test(name ?? '')) {
+            return 'css/[name].[hash][extname]'
+          }
+          return 'assets/[name].[hash][extname]'
+        }
       }
     }
   },
   server: {
     // Configure for local development
-    port: 3000,
-    strictPort: true,
+    port: 5173, // Default Vite port
+    strictPort: false, // Allow fallback to next available port
     cors: true
   }
 }) 
