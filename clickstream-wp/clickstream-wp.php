@@ -12,6 +12,11 @@ if (!defined('WPINC')) {
     die;
 }
 
+// Include admin page files
+require_once plugin_dir_path(__FILE__) . 'home.php';
+require_once plugin_dir_path(__FILE__) . 'setup.php';
+require_once plugin_dir_path(__FILE__) . 'privacy.php';
+
 // Plugin initialization
 function clickstream_wp_init() {
     // Initialization code
@@ -112,89 +117,3 @@ function clickstream_wp_admin_menu() {
     );
 }
 add_action('admin_menu', 'clickstream_wp_admin_menu');
-
-// Home page content
-function clickstream_wp_home_page() {
-    $tracking_enabled = get_option('clickstream_tracking_enabled', false);
-    ?>
-    <div class="wrap">
-        <h1>Clickstream Dashboard</h1>
-        <p>Welcome to Clickstream WP - a powerful tool for tracking user behavior on your WordPress site.</p>
-        <div class="card">
-            <h2>Getting Started</h2>
-            <p>To start tracking user behavior, go to the Setup page and configure your tracking preferences.</p>
-            <a href="<?php echo admin_url('admin.php?page=clickstream-wp-setup'); ?>" class="button button-primary">Go to Setup</a>
-        </div>
-        
-        <div class="card" style="margin-top: 20px;">
-            <h2>Tracking Status</h2>
-            <?php if ($tracking_enabled): ?>
-                <p style="color: green;">✓ Clickstream tracking is currently <strong>enabled</strong>.</p>
-            <?php else: ?>
-                <p style="color: red;">✗ Clickstream tracking is currently <strong>disabled</strong>.</p>
-                <p>Enable tracking in the <a href="<?php echo admin_url('admin.php?page=clickstream-wp-setup'); ?>">Setup</a> page to start collecting data.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php
-}
-
-// Setup page content
-function clickstream_wp_setup_page() {
-    $tracking_enabled = get_option('clickstream_tracking_enabled', false);
-    ?>
-    <div class="wrap">
-        <h1>Clickstream Setup</h1>
-        <p>Configure your tracking preferences below.</p>
-        <form method="post" action="options.php">
-            <?php settings_fields('clickstream_wp_options'); ?>
-            <table class="form-table">
-                <tr valign="top">
-                    <th scope="row">Enable Clickstream Tracking Framework</th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="clickstream_tracking_enabled" value="1" <?php checked(1, $tracking_enabled); ?> />
-                            Enable tracking of user behavior on your website
-                        </label>
-                        <p class="description">When enabled, Clickstream will collect anonymous data about how users interact with your site.</p>
-                    </td>
-                </tr>
-            </table>
-            <?php submit_button('Save Changes'); ?>
-        </form>
-    </div>
-    <?php
-}
-
-// Privacy page content
-function clickstream_wp_privacy_page() {
-    ?>
-    <div class="wrap">
-        <h1>Clickstream Privacy</h1>
-        <p>Manage privacy settings and compliance options.</p>
-        <div class="card" style="width: 100%; max-width: none;">
-            <h2>Data Collection Policy</h2>
-            <p>Configure what data is collected and how long it's stored.</p>
-            <form method="post" action="options.php">
-                <table class="form-table">
-                    <tr valign="top">
-                        <th scope="row">Anonymize IP Addresses</th>
-                        <td><input type="checkbox" name="clickstream_anonymize_ip" value="1" checked /></td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">Data Retention Period (days)</th>
-                        <td><input type="number" name="clickstream_data_retention" value="30" min="1" max="365" /></td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">Cookie Notice</th>
-                        <td><textarea name="clickstream_cookie_notice" rows="5" cols="50">This site uses tracking cookies to understand how you interact with our website. By continuing to use this site, you consent to our use of cookies for analytics purposes.</textarea></td>
-                    </tr>
-                </table>
-                <p class="submit">
-                    <input type="submit" class="button-primary" value="Save Privacy Settings" />
-                </p>
-            </form>
-        </div>
-    </div>
-    <?php
-} 
