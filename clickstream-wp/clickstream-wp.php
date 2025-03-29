@@ -13,7 +13,7 @@ if (!defined('WPINC')) {
 }
 
 // Include admin page files
-require_once plugin_dir_path(__FILE__) . 'home.php';
+require_once plugin_dir_path(__FILE__) . 'admin.php';
 require_once plugin_dir_path(__FILE__) . 'setup.php';
 require_once plugin_dir_path(__FILE__) . 'privacy.php';
 
@@ -74,46 +74,3 @@ function clickstream_wp_output_tracking_script() {
     </script>
     <?php
 }
-
-// Add admin menu
-function clickstream_wp_admin_menu() {
-    // Add main menu
-    add_menu_page(
-        'Clickstream', // Page title
-        'Clickstream', // Menu title
-        'manage_options', // Capability required
-        'clickstream-wp', // Menu slug
-        'clickstream_wp_home_page', // Callback function
-        'dashicons-chart-line', // Icon
-        30 // Position
-    );
-    
-    // Add submenu items
-    add_submenu_page(
-        'clickstream-wp', // Parent slug
-        'Clickstream Home', // Page title
-        'Home', // Menu title
-        'manage_options', // Capability required
-        'clickstream-wp', // Menu slug (same as parent to make it the default)
-        'clickstream_wp_home_page' // Callback function
-    );
-    
-    add_submenu_page(
-        'clickstream-wp', // Parent slug
-        'Clickstream Setup', // Page title
-        'Setup', // Menu title
-        'manage_options', // Capability required
-        'clickstream-wp-setup', // Menu slug
-        'clickstream_wp_setup_page' // Callback function
-    );
-    
-    add_submenu_page(
-        'clickstream-wp', // Parent slug
-        'Clickstream Privacy', // Page title
-        'Privacy', // Menu title
-        'manage_options', // Capability required
-        'clickstream-wp-privacy', // Menu slug
-        'clickstream_wp_privacy_page' // Callback function
-    );
-}
-add_action('admin_menu', 'clickstream_wp_admin_menu');
