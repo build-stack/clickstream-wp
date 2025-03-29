@@ -1,11 +1,11 @@
 {
-  "src/main.tsx": {
-    "file": "js/main.Bku_uLBC.js",
-    "name": "main",
-    "src": "src/main.tsx",
+  "index.html": {
+    "file": "js/index.D72H3ykB.js",
+    "name": "index",
+    "src": "index.html",
     "isEntry": true,
     "css": [
-      "css/main.PoYbNl1P.css"
+      "css/index.Byj-QR56.css"
     ]
   }
 }

@@ -1,3 +1,17 @@
+import logo from '../assets/img/logo.svg';
+
+// Declare the global WordPress admin object
+declare global {
+  interface Window {
+    clickstreamWPAdmin?: {
+      apiNonce: string;
+      apiUrl: string;
+      currentPage: string;
+      pluginUrl: string;
+    };
+  }
+}
+
 interface HeaderProps {
   currentView: string;
   isConnected: boolean;
@@ -5,10 +19,16 @@ interface HeaderProps {
 }
 
 export default function Header({ currentView, isConnected, onNavigate }: HeaderProps) {
+  // Use WordPress plugin path in production, local path in development
+  // wp-content/uploads/2025/03/logo.svg
+  const logoPath = import.meta.env.PROD && window.clickstreamWPAdmin
+    ? `/wp-content/uploads/2025/03/logo.svg`
+    : logo;
+
   return (
     <header className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
       <div className="flex items-center gap-2">
-        <img src="/wp-content/plugins/clickstream-wp/assets/admin/img/logo.svg" alt="Clickstream" className="w-8 h-8" />
+        <img src={logoPath} alt="Clickstream" className="w-8 h-8" />
         <h1 className="text-xl font-semibold text-wp-admin-text">Clickstream</h1>
       </div>
 

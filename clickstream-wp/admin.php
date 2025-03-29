@@ -72,16 +72,18 @@ function clickstream_wp_enqueue_admin_assets() {
     }
 
     $manifest = json_decode(file_get_contents($manifest_path), true);
-    $entry_point = $manifest['src/main.tsx'];
+    $entry_point = $manifest['index.html'];
 
     // Enqueue the main JavaScript file
-    wp_enqueue_script(
-        'clickstream-wp-admin',
-        plugin_dir_url(__FILE__) . 'assets/admin/' . $entry_point['file'],
-        array(),
-        '1.0.0',
-        true
-    );
+    if (isset($entry_point['file'])) {
+        wp_enqueue_script(
+            'clickstream-wp-admin',
+            plugin_dir_url(__FILE__) . 'assets/admin/' . $entry_point['file'],
+            array(),
+            '1.0.0',
+            true
+        );
+    }
 
     // Enqueue CSS files
     if (isset($entry_point['css']) && is_array($entry_point['css'])) {
@@ -95,11 +97,27 @@ function clickstream_wp_enqueue_admin_assets() {
         }
     }
 
+    // Enqueue assets from imports
+    if (isset($entry_point['imports']) && is_array($entry_point['imports'])) {
+        foreach ($entry_point['imports'] as $import) {
+            if (isset($manifest[$import]['file'])) {
+                wp_enqueue_script(
+                    'clickstream-wp-admin-' . basename($import, '.js'),
+                    plugin_dir_url(__FILE__) . 'assets/admin/' . $manifest[$import]['file'],
+                    array('clickstream-wp-admin'),
+                    '1.0.0',
+                    true
+                );
+            }
+        }
+    }
+
     // Add admin settings as JavaScript data
     wp_localize_script('clickstream-wp-admin', 'clickstreamWPAdmin', array(
         'apiNonce' => wp_create_nonce('wp_rest'),
         'apiUrl' => rest_url('clickstream-wp/v1'),
         'currentPage' => str_replace('clickstream-wp-', '', $_GET['page']),
+        'pluginUrl' => plugin_dir_url(__FILE__),
     ));
 }
 add_action('admin_enqueue_scripts', 'clickstream_wp_enqueue_admin_assets');

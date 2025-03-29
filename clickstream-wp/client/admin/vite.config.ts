@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,16 +12,20 @@ export default defineConfig({
     // Generate manifest for WordPress to understand the bundled files
     manifest: true,
     rollupOptions: {
-      input: 'src/main.tsx',
+      input: resolve(__dirname, 'index.html'),
       output: {
         // Keep the directory structure consistent
         entryFileNames: 'js/[name].[hash].js',
-        chunkFileNames: 'js/chunks/[name].[hash].js',
-        assetFileNames: ({name}) => {
-          if (/\.css$/.test(name ?? '')) {
+        chunkFileNames: 'js/[name].[hash].js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
             return 'css/[name].[hash][extname]'
           }
-          return 'assets/[name].[hash][extname]'
+          // Put images in the img directory
+          if (assetInfo.name?.match(/\.(png|jpe?g|gif|svg|webp)$/)) {
+            return 'img/[name].[hash][extname]'
+          }
+          return '[name].[hash][extname]'
         }
       }
     }
