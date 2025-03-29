@@ -131,4 +131,232 @@ button:hover {
 button:focus {
   outline: none;
   box-shadow: 0 0 0 1px white, 0 0 0 3px #2271b1;
+}
+
+.app {
+  min-height: 100vh;
+  background-color: #f0f0f1;
+  color: #1e1e1e;
+}
+
+.app-content {
+  margin-top: 20px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  margin: 0 auto;
+}
+
+.main-panel {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.side-panel {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Header Styles */
+.header {
+  background: #fff;
+  border-bottom: 1px solid #dcdcde;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #1e1e1e;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9em;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.connected {
+  background-color: #00a32a;
+}
+
+.status-dot.disconnected {
+  background-color: #d63638;
+}
+
+/* Config Panel Styles */
+.config-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-section label {
+  font-weight: 600;
+  color: #1e1e1e;
+}
+
+.config-section input,
+.config-section select {
+  padding: 8px;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Sessions Overview Styles */
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-item {
+  padding: 12px;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #f6f7f7;
+  border-radius: 4px;
+}
+
+/* Insights Dashboard Styles */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  background: #f6f7f7;
+  padding: 16px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2271b1;
+  margin: 8px 0;
+}
+
+.metric-label {
+  font-size: 14px;
+  color: #50575e;
+}
+
+.chart-container {
+  margin: 24px 0;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .side-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .session-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Header Navigation Styles */
+.header-nav ul {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  background: transparent;
+  border: none;
+  color: #1d2327;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: #f0f0f1;
+  color: #2271b1;
+}
+
+.nav-link.active {
+  background: #2271b1;
+  color: white;
+}
+
+.nav-link.active:hover {
+  background: #135e96;
+  color: white;
 } 

@@ -1,167 +1,150 @@
-import { useState } from 'react'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js'
-import { Line } from 'react-chartjs-2'
+import { useState, useEffect } from 'react'
+import { Header } from './components/Header'
+import { ConfigPanel } from './components/ConfigPanel'
+import { SessionsOverview } from './components/SessionsOverview'
+import { InsightsDashboard } from './components/InsightsDashboard'
 import './App.css'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
+// Mock data for development
+const mockSessions = [
+  {
+    id: '1',
+    startTime: new Date().toISOString(),
+    duration: 300,
+    pageCount: 5,
+    device: 'desktop',
+    browser: 'chrome'
+  },
+  // Add more mock sessions as needed
+];
 
-declare global {
-  interface Window {
-    clickstreamWPAdmin: {
-      apiNonce: string;
-      apiUrl: string;
-      currentPage: string;
-    }
-  }
-}
+const mockTimeseriesData = {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  visitors: [150, 230, 180, 290, 200, 150, 320],
+  pageviews: [300, 450, 360, 580, 400, 300, 640],
+};
 
-function Dashboard() {
-  const [count, setCount] = useState(0)
-
-  const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'Page Views',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        borderColor: 'rgb(34, 113, 177)',
-        backgroundColor: 'rgba(34, 113, 177, 0.5)',
-      },
-      {
-        label: 'Unique Visitors',
-        data: [28, 48, 40, 19, 86, 27, 90],
-        borderColor: 'rgb(19, 94, 150)',
-        backgroundColor: 'rgba(19, 94, 150, 0.5)',
-      },
-    ],
-  }
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Website Traffic Overview',
-      },
-    },
-  }
-
-  return (
-    <div className="admin-page">
-      <h1>Dashboard</h1>
-      <div className="stats-grid">
-        <div className="stats-card">
-          <h2>Quick Stats</h2>
-          <div className="stats-grid">
-            <div>
-              <p>Total Views</p>
-              <p className="text-2xl font-semibold">1,234</p>
-            </div>
-            <div>
-              <p>Unique Visitors</p>
-              <p className="text-2xl font-semibold">567</p>
-            </div>
-          </div>
-        </div>
-        <div className="stats-card">
-          <h2>Activity</h2>
-          <button onClick={() => setCount((count) => count + 1)}>
-            Refresh Data ({count})
-          </button>
-        </div>
-      </div>
-      <div className="chart-container">
-        <Line options={options} data={chartData} />
-      </div>
-    </div>
-  )
-}
-
-function Setup() {
-  return (
-    <div className="admin-page">
-      <h1>Setup</h1>
-      <div className="stats-card">
-        <h2>Configuration</h2>
-        <p>Configure your Clickstream WP settings here</p>
-        <div className="form-group">
-          <label>API Key</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter your API key"
-          />
-        </div>
-        <div className="form-group">
-          <label>Tracking Mode</label>
-          <select className="form-control">
-            <option>Production</option>
-            <option>Development</option>
-            <option>Debug</option>
-          </select>
-        </div>
-        <button>Save Settings</button>
-      </div>
-    </div>
-  )
-}
-
-function Privacy() {
-  return (
-    <div className="admin-page">
-      <h1>Privacy</h1>
-      <div className="stats-card">
-        <h2>Privacy Settings</h2>
-        <p>Manage your privacy settings and data handling preferences</p>
-        <div className="checkbox-group">
-          <input type="checkbox" id="anonymize" />
-          <label htmlFor="anonymize">Anonymize IP Addresses</label>
-        </div>
-        <div className="checkbox-group">
-          <input type="checkbox" id="cookies" />
-          <label htmlFor="cookies">Enable Cookie Consent</label>
-        </div>
-        <div className="checkbox-group">
-          <input type="checkbox" id="retention" />
-          <label htmlFor="retention">Limit Data Retention (30 days)</label>
-        </div>
-        <button>Save Privacy Settings</button>
-      </div>
-    </div>
-  )
-}
+const mockTopPages = [
+  {
+    path: '/home',
+    views: 1200,
+    avgTimeOnPage: 180
+  },
+  {
+    path: '/products',
+    views: 800,
+    avgTimeOnPage: 240
+  },
+  {
+    path: '/about',
+    views: 500,
+    avgTimeOnPage: 120
+  },
+];
 
 function App() {
-  const currentPage = window.clickstreamWPAdmin?.currentPage || '';
+  const [currentView, setCurrentView] = useState('dashboard');
+  const [isConnected, setIsConnected] = useState(true);
+  const [trackingEnabled, setTrackingEnabled] = useState(true);
+  const [config, setConfig] = useState({
+    apiKey: 'sample-api-key-123',
+    domain: 'example.com',
+    samplingRate: 100
+  });
 
-  switch (currentPage) {
-    case 'setup':
-      return <Setup />
-    case 'privacy':
-      return <Privacy />
-    default:
-      return <Dashboard />
-  }
+  // Check connection status periodically
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        // In a real implementation, this would be an API endpoint check
+        const response = await fetch('/wp-json/clickstream/v1/status');
+        setIsConnected(response.ok);
+      } catch (error) {
+        setIsConnected(false);
+      }
+    };
+
+    // Check immediately on mount
+    checkConnection();
+
+    // Then check every 30 seconds
+    const intervalId = setInterval(checkConnection, 30000);
+
+    // Cleanup on unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const handleConfigSave = (newConfig: typeof config) => {
+    setConfig(newConfig);
+    // TODO: Save to WordPress options
+  };
+
+  const handleFilterChange = (filters: any) => {
+    console.log('Filters changed:', filters);
+    // TODO: Fetch filtered data
+  };
+
+  const handleNavigate = (view: string) => {
+    setCurrentView(view);
+  };
+
+  return (
+    <div className="app">
+      <Header
+        isConnected={isConnected}
+        trackingEnabled={trackingEnabled}
+        onToggleTracking={() => setTrackingEnabled(!trackingEnabled)}
+        currentView={currentView}
+        onNavigate={handleNavigate}
+      />
+
+      <main className="app-content">
+        <div className="content-grid">
+          <div className="main-panel">
+            {currentView === 'dashboard' && (
+              <InsightsDashboard
+                timeseriesData={mockTimeseriesData}
+                topPages={mockTopPages}
+                interactionMetrics={{
+                  avgSessionDuration: 240,
+                  bounceRate: 35.5,
+                  pagesPerSession: 2.8
+                }}
+              />
+            )}
+
+            {currentView === 'sessions' && (
+              <SessionsOverview
+                sessions={mockSessions}
+                totalSessions={1250}
+                onFilterChange={handleFilterChange}
+              />
+            )}
+
+            {currentView === 'settings' && (
+              <ConfigPanel
+                apiKey={config.apiKey}
+                domain={config.domain}
+                samplingRate={config.samplingRate}
+                onSave={handleConfigSave}
+              />
+            )}
+          </div>
+
+          {currentView !== 'settings' && (
+            <aside className="side-panel">
+              <ConfigPanel
+                apiKey={config.apiKey}
+                domain={config.domain}
+                samplingRate={config.samplingRate}
+                onSave={handleConfigSave}
+              />
+            </aside>
+          )}
+        </div>
+      </main>
+    </div>
+  )
 }
 
 export default App 
