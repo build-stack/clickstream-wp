@@ -1,3 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-wp-admin-background text-wp-admin-text;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded bg-wp-admin-primary text-white hover:bg-wp-admin-hover transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 rounded bg-gray-200 text-wp-admin-text hover:bg-gray-300 transition-colors;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-wp-admin-primary focus:border-transparent;
+  }
+
+  .card {
+    @apply bg-white p-6 rounded-lg shadow-sm;
+  }
+}
+
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 1.5;

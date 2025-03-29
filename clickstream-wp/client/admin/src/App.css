@@ -1,3 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .app {
+    @apply min-h-screen;
+  }
+
+  .app-content {
+    @apply p-6;
+  }
+
+  .content-grid {
+    @apply grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6;
+  }
+
+  .main-panel {
+    @apply bg-white p-6 rounded-lg shadow-sm;
+  }
+
+  .side-panel {
+    @apply bg-white p-6 rounded-lg shadow-sm;
+  }
+
+  /* Header styles */
+  .header {
+    @apply flex items-center justify-between p-4 bg-white border-b border-gray-200;
+  }
+
+  .header-logo {
+    @apply flex items-center gap-2;
+  }
+
+  .header-logo img {
+    @apply w-8 h-8;
+  }
+
+  .header-logo h1 {
+    @apply text-xl font-semibold text-wp-admin-text;
+  }
+
+  .header-nav ul {
+    @apply flex gap-4;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded-md transition-colors hover:bg-gray-100;
+  }
+
+  .nav-link.active {
+    @apply bg-wp-admin-primary text-white hover:bg-wp-admin-hover;
+  }
+
+  .header-status {
+    @apply flex items-center gap-4;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-dot.connected {
+    @apply bg-green-500;
+  }
+
+  .status-dot.disconnected {
+    @apply bg-red-500;
+  }
+
+  /* Config panel styles */
+  .config-panel {
+    @apply space-y-6;
+  }
+
+  .config-section {
+    @apply space-y-2;
+  }
+
+  .config-section label {
+    @apply block text-sm font-medium text-wp-admin-text;
+  }
+
+  /* Sessions list styles */
+  .sessions-list {
+    @apply space-y-4;
+  }
+
+  .session-item {
+    @apply grid grid-cols-[1fr_auto] gap-4 p-4 bg-white rounded-lg border border-gray-200;
+  }
+
+  /* Insights dashboard styles */
+  .metrics-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .metric-card {
+    @apply p-4 bg-white rounded-lg border border-gray-200;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .content-grid {
+      @apply grid-cols-1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      @apply flex-col gap-4;
+    }
+
+    .header-nav ul {
+      @apply flex-wrap justify-center;
+    }
+  }
+}
+
 #root {
   width: 100%;
   margin: 0;

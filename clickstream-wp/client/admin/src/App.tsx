@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Header } from './components/Header'
+import Header from './components/Header'
 import { ConfigPanel } from './components/ConfigPanel'
 import { SessionsOverview } from './components/SessionsOverview'
 import { InsightsDashboard } from './components/InsightsDashboard'
@@ -43,93 +43,78 @@ const mockTopPages = [
 ];
 
 function App() {
-  const [currentView, setCurrentView] = useState('dashboard');
-  const [isConnected, setIsConnected] = useState(true);
-  const [trackingEnabled, setTrackingEnabled] = useState(true);
+  const [currentView, setCurrentView] = useState('insights')
+  const [isConnected, setIsConnected] = useState(false)
   const [config, setConfig] = useState({
-    apiKey: 'sample-api-key-123',
-    domain: 'example.com',
-    samplingRate: 100
-  });
+    apiKey: '',
+    domain: '',
+    samplingRate: 100,
+  })
 
-  // Check connection status periodically
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // In a real implementation, this would be an API endpoint check
-        const response = await fetch('/wp-json/clickstream/v1/status');
-        setIsConnected(response.ok);
+        const response = await fetch('/wp-json/clickstream/v1/status')
+        const data = await response.json()
+        setIsConnected(data.connected)
       } catch (error) {
-        setIsConnected(false);
+        setIsConnected(false)
       }
-    };
+    }
 
-    // Check immediately on mount
-    checkConnection();
+    checkConnection()
+    const interval = setInterval(checkConnection, 30000)
 
-    // Then check every 30 seconds
-    const intervalId = setInterval(checkConnection, 30000);
-
-    // Cleanup on unmount
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const handleConfigSave = (newConfig: typeof config) => {
-    setConfig(newConfig);
-    // TODO: Save to WordPress options
-  };
-
-  const handleFilterChange = (filters: any) => {
-    console.log('Filters changed:', filters);
-    // TODO: Fetch filtered data
-  };
+    return () => clearInterval(interval)
+  }, [])
 
   const handleNavigate = (view: string) => {
-    setCurrentView(view);
-  };
+    setCurrentView(view)
+  }
+
+  const handleSaveConfig = (newConfig: typeof config) => {
+    setConfig(newConfig)
+    // TODO: Save to WordPress options
+  }
 
   return (
     <div className="app">
       <Header
-        isConnected={isConnected}
-        trackingEnabled={trackingEnabled}
-        onToggleTracking={() => setTrackingEnabled(!trackingEnabled)}
         currentView={currentView}
+        isConnected={isConnected}
         onNavigate={handleNavigate}
       />
-
-      <main className="app-content">
+      
+      <div className="app-content">
         <div className="content-grid">
-          <div className="main-panel">
-            {currentView === 'dashboard' && (
+          <main className="main-panel">
+            {currentView === 'insights' && (
               <InsightsDashboard
                 timeseriesData={mockTimeseriesData}
                 topPages={mockTopPages}
                 interactionMetrics={{
-                  avgSessionDuration: 240,
-                  bounceRate: 35.5,
-                  pagesPerSession: 2.8
+                  avgSessionDuration: 245,
+                  bounceRate: 35,
+                  pagesPerSession: 3.5
                 }}
               />
             )}
-
             {currentView === 'sessions' && (
               <SessionsOverview
                 sessions={mockSessions}
-                totalSessions={1250}
-                onFilterChange={handleFilterChange}
+                totalSessions={156}
+                onFilterChange={() => {}}
               />
             )}
-
             {currentView === 'settings' && (
               <ConfigPanel
                 apiKey={config.apiKey}
                 domain={config.domain}
                 samplingRate={config.samplingRate}
-                onSave={handleConfigSave}
+                onSave={handleSaveConfig}
               />
             )}
-          </div>
+          </main>
 
           {currentView !== 'settings' && (
             <aside className="side-panel">
@@ -137,12 +122,12 @@ function App() {
                 apiKey={config.apiKey}
                 domain={config.domain}
                 samplingRate={config.samplingRate}
-                onSave={handleConfigSave}
+                onSave={handleSaveConfig}
               />
             </aside>
           )}
         </div>
-      </main>
+      </div>
     </div>
   )
 }
