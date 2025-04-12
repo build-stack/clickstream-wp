@@ -63,7 +63,7 @@ function clickstream_wp_enqueue_scripts() {
     
     if ($tracking_enabled && !empty($environment_id)) {
         // Define the script URL
-        $script_url = 'https://clickstream-core-packages-prod.s3.eu-central-1.amazonaws.com/clickstream-core/1.2.0/clickstream.min.js'; // Replace with your actual script URL
+        $script_url = 'https://clickstream-core-packages-prod.s3.eu-central-1.amazonaws.com/clickstream-core/1.2.1/clickstream.min.js'; // Replace with your actual script URL
         
         // Enqueue the script in the head
         wp_enqueue_script('clickstream-tracking', $script_url, array(), '1.0.0', false);
@@ -89,7 +89,7 @@ function clickstream_wp_output_tracking_script() {
             samplingRate: 1, // Record all events
             maskAllInputs: false, // Mask input values for privacy
             remoteEndpoint: 'http://ec2-52-59-73-49.eu-central-1.compute.amazonaws.com:3000/events',
-            maxEvents: 50,
+            maxEvents: 10,
             environmentId: '<?php echo esc_js($environment_id); ?>', // Custom environment identifier
         });
 
