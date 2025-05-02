@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
-import { ConfigPanel } from './components/ConfigPanel'
 import { SessionsOverview } from './components/SessionsOverview'
 import { InsightsDashboard } from './components/InsightsDashboard'
 import './App.css'
@@ -15,7 +14,6 @@ const mockSessions = [
     device: 'desktop',
     browser: 'chrome'
   },
-  // Add more mock sessions as needed
 ];
 
 const mockTimeseriesData = {
@@ -43,13 +41,7 @@ const mockTopPages = [
 ];
 
 function App() {
-  const [currentView, setCurrentView] = useState('insights')
   const [isConnected, setIsConnected] = useState(false)
-  const [config, setConfig] = useState({
-    apiKey: '',
-    domain: '',
-    samplingRate: 100,
-  })
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -68,64 +60,25 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  const handleNavigate = (view: string) => {
-    setCurrentView(view)
-  }
-
-  const handleSaveConfig = (newConfig: typeof config) => {
-    setConfig(newConfig)
-    // TODO: Save to WordPress options
-  }
-
   return (
     <div className="app">
-      <Header
-        currentView={currentView}
-        isConnected={isConnected}
-        onNavigate={handleNavigate}
-      />
-      
+      <Header isConnected={isConnected} />
       <div className="app-content">
-        <div className="content-grid">
-          <main className="main-panel">
-            {currentView === 'insights' && (
-              <InsightsDashboard
-                timeseriesData={mockTimeseriesData}
-                topPages={mockTopPages}
-                interactionMetrics={{
-                  avgSessionDuration: 245,
-                  bounceRate: 35,
-                  pagesPerSession: 3.5
-                }}
-              />
-            )}
-            {currentView === 'sessions' && (
-              <SessionsOverview
-                sessions={mockSessions}
-                totalSessions={156}
-                onFilterChange={() => {}}
-              />
-            )}
-            {currentView === 'settings' && (
-              <ConfigPanel
-                apiKey={config.apiKey}
-                domain={config.domain}
-                samplingRate={config.samplingRate}
-                onSave={handleSaveConfig}
-              />
-            )}
-          </main>
-
-          {currentView !== 'settings' && (
-            <aside className="side-panel">
-              <ConfigPanel
-                apiKey={config.apiKey}
-                domain={config.domain}
-                samplingRate={config.samplingRate}
-                onSave={handleSaveConfig}
-              />
-            </aside>
-          )}
+        <div className="dashboard-grid">
+          <InsightsDashboard
+            timeseriesData={mockTimeseriesData}
+            topPages={mockTopPages}
+            interactionMetrics={{
+              avgSessionDuration: 245,
+              bounceRate: 35,
+              pagesPerSession: 3.5
+            }}
+          />
+          <SessionsOverview
+            sessions={mockSessions}
+            totalSessions={156}
+            onFilterChange={() => {}}
+          />
         </div>
       </div>
     </div>

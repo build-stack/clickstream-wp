@@ -126,9 +126,25 @@ add_action('admin_enqueue_scripts', 'clickstream_wp_enqueue_admin_assets');
  * Render the admin page container
  */
 function clickstream_wp_render_admin_page() {
-    ?>
-    <div class="wrap">
-        <div id="root"></div>
-    </div>
-    <?php
+    $current_page = $_GET['page'] ?? 'clickstream-wp';
+    
+    // Only render React app on main dashboard
+    if ($current_page === 'clickstream-wp') {
+        ?>
+        <div class="wrap">
+            <div id="root"></div>
+        </div>
+        <?php
+        return;
+    }
+    
+    // For other pages, call their specific render functions
+    switch ($current_page) {
+        case 'clickstream-wp-setup':
+            clickstream_wp_setup_page();
+            break;
+        case 'clickstream-wp-privacy':
+            clickstream_wp_privacy_page();
+            break;
+    }
 } 

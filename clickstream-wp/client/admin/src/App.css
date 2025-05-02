@@ -11,16 +11,8 @@
     @apply p-6;
   }
 
-  .content-grid {
-    @apply grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6;
-  }
-
-  .main-panel {
-    @apply bg-white p-6 rounded-lg shadow-sm;
-  }
-
-  .side-panel {
-    @apply bg-white p-6 rounded-lg shadow-sm;
+  .dashboard-grid {
+    @apply bg-white p-6 rounded-lg shadow-sm space-y-6;
   }
 
   /* Header styles */
@@ -97,6 +89,24 @@
 
   .metric-card {
     @apply p-4 bg-white rounded-lg border border-gray-200;
+  }
+
+  /* Typography */
+  h1 {
+    @apply text-xl font-semibold text-wp-admin-text m-0 p-0;
+  }
+
+  h2 {
+    @apply text-lg font-medium text-wp-admin-text mb-4;
+  }
+
+  p {
+    @apply text-sm text-wp-admin-text;
+  }
+
+  /* Chart styles */
+  .chart-container {
+    @apply bg-white p-4 rounded-lg border border-gray-200 mt-6;
   }
 
   /* Responsive adjustments */
@@ -203,14 +213,6 @@ button:hover {
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.chart-container {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-top: 2rem;
 }
 
 .form-group {
