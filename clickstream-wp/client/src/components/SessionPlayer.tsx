@@ -18,7 +18,6 @@ interface SessionPlayerProps {
 const SessionPlayer: React.FC<SessionPlayerProps> = ({ 
   events, 
   width = '100%', 
-  height = '600px' 
 }) => {
   useEffect(() => {
     // First, destroy any existing player
@@ -56,7 +55,6 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
           props: {
             events: events,
             width: typeof width === 'number' ? width : undefined,
-            height: typeof height === 'number' ? height : undefined,
             showController: true,
             autoPlay: false,
           }
@@ -71,7 +69,7 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
       // We don't destroy on component unmount - we'll let the next mount handle it
       // This prevents issues with React's StrictMode double-mounting
     };
-  }, [events, width, height]);
+  }, [events, width]);
 
   if (!events.length) {
     return <div>No events available for replay</div>;
@@ -81,9 +79,7 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
     <div 
       id={PLAYER_CONTAINER_ID}
       style={{ 
-        width, 
-        height,
-        minHeight: typeof height === 'number' ? `${height}px` : height 
+        width
       }}
     />
   );

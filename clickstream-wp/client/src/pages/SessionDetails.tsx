@@ -94,7 +94,7 @@ const SessionDetails: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-medium">Session Details</h2>
+          <h2 className="text-lg font-medium">&nbsp;</h2>
           <Link 
             to="/" 
             className="text-blue-600 hover:text-blue-800 text-sm flex items-center"
@@ -137,9 +137,7 @@ const SessionDetails: React.FC = () => {
           </div>
         </Card>
         
-        <Card title="Session Replay">
-          <SessionPlayer events={sessionData.events as unknown as eventWithTime[]} />
-        </Card>
+        <SessionPlayer events={sessionData.events as unknown as eventWithTime[]} />
         
         {/* <Card title="Event Summary">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -10,3 +10,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 } 
+
+.rr-player {
+  float: none !important;
+  box-shadow: none !important;
+  margin: 0 auto !important;
+  background-color: transparent !important;
+}
+
+.rr-player__frame {
+  margin-bottom: 2rem;
+}
+
+.rr-player-container {
+  width: 100% !important;
+}
+
