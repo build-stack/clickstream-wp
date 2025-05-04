@@ -38,34 +38,6 @@ class Clickstream_WP_Admin {
             'dashicons-chart-line',
             30
         );
-        
-        // Add submenu items
-        add_submenu_page(
-            'clickstream-wp',
-            'Dashboard',
-            'Dashboard',
-            'manage_options',
-            'clickstream-wp',
-            array($this, 'render_admin_page')
-        );
-        
-        add_submenu_page(
-            'clickstream-wp',
-            'Setup',
-            'Setup',
-            'manage_options',
-            'clickstream-wp-setup',
-            array($this, 'render_admin_page')
-        );
-        
-        add_submenu_page(
-            'clickstream-wp',
-            'Privacy',
-            'Privacy',
-            'manage_options',
-            'clickstream-wp-privacy',
-            array($this, 'render_admin_page')
-        );
     }
     
     /**

@@ -3,7 +3,6 @@ import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard';
 import Setup from './pages/Setup';
 import Privacy from './pages/Privacy';
-import Sidebar from './components/Sidebar';
 
 const App: React.FC = () => {
   // Get WordPress admin settings
@@ -28,18 +27,13 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-1 p-6">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/setup" element={<Setup />} />
-            <Route path="/privacy" element={<Privacy />} />
-            {/* Redirect to appropriate page based on WordPress current page */}
-            <Route path="*" element={<Navigate to={initialPage()} replace />} />
-          </Routes>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/setup" element={<Setup />} />
+        <Route path="/privacy" element={<Privacy />} />
+        {/* Redirect to appropriate page based on WordPress current page */}
+        <Route path="*" element={<Navigate to={initialPage()} replace />} />
+      </Routes>
     </Router>
   );
 };
