@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
+import SessionPlayer from '../components/SessionPlayer';
 import { getSessionRecordingDetails } from '../utils/api/sessionRecordings';
+import { SessionDetails as SessionDetailsType } from '../types';
+import { eventWithTime } from '@rrweb/types';
 
 const SessionDetails: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [sessionData, setSessionData] = useState<any>(null);
+  const [sessionData, setSessionData] = useState<SessionDetailsType | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
 
   useEffect(() => {
     const fetchSessionDetails = async () => {
@@ -16,7 +20,20 @@ const SessionDetails: React.FC = () => {
       
       try {
         setLoading(true);
+        
+        // Show progress based on estimated time
+        const progressInterval = setInterval(() => {
+          setLoadingProgress((prev) => {
+            // Don't go to 100% as that would indicate completion
+            return prev < 90 ? prev + 10 : prev;
+          });
+        }, 500);
+        
         const data = await getSessionRecordingDetails(sessionId);
+        
+        clearInterval(progressInterval);
+        setLoadingProgress(100);
+        
         setSessionData(data);
         setError(null);
       } catch (err: any) {
@@ -33,14 +50,25 @@ const SessionDetails: React.FC = () => {
   // Format timestamp to readable date
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
-    return date.toLocaleString();
+    return date.toLocaleString() + '.' + date.getMilliseconds().toString().padStart(3, '0');
   };
 
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="flex justify-center p-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="flex flex-col items-center justify-center p-6">
+          <div className="w-full max-w-md bg-gray-200 rounded-full h-2.5 mb-4">
+            <div 
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+              style={{ width: `${loadingProgress}%` }}
+            ></div>
+          </div>
+          <p className="text-gray-600">
+            {loadingProgress < 100 
+              ? `Loading session data (${loadingProgress}%)...` 
+              : 'Processing events...'}
+          </p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mt-4"></div>
         </div>
       );
     }
@@ -89,18 +117,43 @@ const SessionDetails: React.FC = () => {
               <p className="mt-1">{sessionData.environmentId}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Created At</h3>
-              <p className="mt-1">{sessionData.timestamp ? formatDate(sessionData.timestamp) : 'N/A'}</p>
+              <h3 className="text-sm font-medium text-gray-500">Session End</h3>
+              <p className="mt-1">{formatDate(sessionData.timestamp)}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">First Event At</h3>
-              <p className="mt-1">{sessionData.firstEventAt ? formatDate(sessionData.firstEventAt) : 'N/A'}</p>
+              <h3 className="text-sm font-medium text-gray-500">Session Start</h3>
+              <p className="mt-1">{formatDate(sessionData.firstEventAt)}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Duration</h3>
+              <p className="mt-1">
+                {((sessionData.timestamp - sessionData.firstEventAt) / 1000).toFixed(1)} seconds
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Total Events</h3>
+              <p className="mt-1">{sessionData.events.length}</p>
             </div>
           </div>
         </Card>
         
+        <Card title="Session Replay">
+          <SessionPlayer events={sessionData.events as unknown as eventWithTime[]} />
+        </Card>
+        
+        {/* <Card title="Event Summary">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Object.entries(eventCounts).map(([type, count]) => (
+              <div key={type} className="bg-gray-50 p-3 rounded border border-gray-100">
+                <h3 className="text-sm font-medium text-gray-600">{type}</h3>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{count}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+        
         <Card title="Session Timeline">
-          {sessionData.events && sessionData.events.length > 0 ? (
+          {sessionData.events.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50">
@@ -111,15 +164,49 @@ const SessionDetails: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sessionData.events.map((event: any, index: number) => (
-                    <tr key={index} className="border-b border-gray-100">
+                  {sessionData.events.map((event: SessionEvent, index: number) => (
+                    <tr key={event.id || index} className="border-b border-gray-100">
                       <td className="px-4 py-3">{formatDate(event.timestamp)}</td>
-                      <td className="px-4 py-3">{event.type || 'Unknown'}</td>
+                      <td className="px-4 py-3">
+                        {(() => {
+                          const formatEventType = (type: string) => {
+                            const EventType = {
+                              "0": "DomContentLoaded",
+                              "1": "Load",
+                              "2": "FullSnapshot",
+                              "3": "IncrementalSnapshot",
+                              "4": "Meta",
+                              "5": "Custom",
+                              "6": "Plugin"
+                            };
+                            return EventType[type as keyof typeof EventType] || type;
+                          };
+                          return formatEventType(event.type);
+                        })()}
+                      </td>
                       <td className="px-4 py-3">
                         {event.data ? (
-                          <pre className="text-xs bg-gray-50 p-2 rounded overflow-x-auto">
-                            {JSON.stringify(event.data, null, 2)}
-                          </pre>
+                          <div>
+                            <button 
+                              className="text-blue-600 hover:text-blue-800 text-sm mb-1 focus:outline-none"
+                              onClick={() => {
+                                const elem = document.getElementById(`event-data-${event.id || index}`);
+                                if (elem) {
+                                  elem.classList.toggle('hidden');
+                                }
+                              }}
+                            >
+                              {document.getElementById(`event-data-${event.id || index}`)?.classList.contains('hidden') 
+                                ? 'Show details' 
+                                : 'Hide details'}
+                            </button>
+                            <pre 
+                              id={`event-data-${event.id || index}`}
+                              className="text-xs bg-gray-50 p-2 rounded overflow-x-auto hidden"
+                            >
+                              {JSON.stringify(event.data, null, 2)}
+                            </pre>
+                          </div>
                         ) : (
                           'No details'
                         )}
@@ -132,7 +219,7 @@ const SessionDetails: React.FC = () => {
           ) : (
             <p className="text-gray-500">No events recorded for this session</p>
           )}
-        </Card>
+        </Card> */}
       </div>
     );
   };

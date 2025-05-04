@@ -17,7 +17,18 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
       },
+      // Make sure to generate outputs as IIFE format (not ES modules)
+      output: {
+        format: 'iife',
+        entryFileNames: '[name]-[hash].js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: '[name]-[hash].[ext]',
+      }
     },
+    // Generate sourcemaps for easier debugging
+    sourcemap: true,
+    // Ensure proper bundling for older browsers
+    target: 'es2015',
   },
   server: {
     port: 3000,
