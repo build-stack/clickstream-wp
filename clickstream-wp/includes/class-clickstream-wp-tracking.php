@@ -27,7 +27,7 @@ class Clickstream_WP_Tracking {
     public function enqueue_scripts() {
         if (get_option('clickstream_tracking_enabled', false)) {
             // Define the script URL
-            $script_url = 'https://clickstream-core-packages-prod.s3.eu-central-1.amazonaws.com/clickstream-core/1.4.0/clickstream.min.js';
+            $script_url = 'https://clickstream-core-packages-prod.s3.eu-central-1.amazonaws.com/clickstream-core/1.5.0/clickstream.min.js';
             
             // Enqueue the script in the head
             wp_enqueue_script('clickstream-tracking', $script_url, array(), CLICKSTREAM_WP_VERSION, false);
@@ -55,6 +55,7 @@ class Clickstream_WP_Tracking {
                 remoteEndpoint: '<?php echo esc_js($remote_url); ?>events',
                 maxEvents: 50,
                 environmentId: '<?php echo esc_js($environment_id); ?>',
+                captureClientInfo: true,
             });
 
             tracker.start();
