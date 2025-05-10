@@ -61,7 +61,7 @@ const Privacy: React.FC = () => {
   };
 
   return (
-    <Layout title="Privacy Settings">
+    <Layout>
       <div className="p-4 md:p-6">
         <p className="mb-4 text-gray-600">Configure privacy settings and compliance options.</p>
         

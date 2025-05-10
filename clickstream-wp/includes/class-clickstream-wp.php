@@ -97,6 +97,9 @@ class Clickstream_WP {
         
         // Register settings
         add_action('admin_init', array($this, 'register_settings'));
+
+        // Enqueue admin styles
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
     }
 
     /**
@@ -259,5 +262,22 @@ class Clickstream_WP {
         
         $response_code = wp_remote_retrieve_response_code($response);
         return $response_code === 200;
+    }
+
+    /**
+     * Enqueue admin styles
+     */
+    public function enqueue_admin_styles($hook) {
+        // Only load on plugin pages
+        if (strpos($hook, 'clickstream-wp') === false) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'clickstream-wp',
+            CLICKSTREAM_WP_URL . 'clickstream.css',
+            array(),
+            CLICKSTREAM_WP_VERSION
+        );
     }
 } 

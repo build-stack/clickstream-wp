@@ -8,11 +8,11 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       <Toolbar />
-      <main className="flex-1 relative">
+      <main className="flex-1">
         {title && (
-          <h1 className="text-2xl font-semibold text-gray-800 mb-6">{title}</h1>
+          <h1 className="mx-6 mt-4 text-2xl font-semibold text-gray-800 mb-6">{title}</h1>
         )}
         <div className="rounded-lg shadow-xs">
           {children}

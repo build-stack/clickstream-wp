@@ -62,19 +62,20 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
     // Only create player if we have events
     if (events.length > 0 && container) {
       try {
+        const scale = 0.75;
         console.log(`Initializing player with ${events.length} events`);
-        
+        console.log(`Player height: ${window.innerHeight - ( 64 + 80 )}`);
         globalPlayer = new rrwebPlayer({
           target: container,
           props: {
             events: events,
-            width: 800,
+            width: (window.innerWidth - 64) * scale,
+            height: (window.innerHeight - ( 64 + 80 ) * 2) * scale, // Using viewport height instead of screen height
             showController,
             autoPlay,
             speed,
             skipInactive,
             showWarning,
-            blockClass,
             liveMode,
             UNSAFE_replayCanvas: true,
           }
@@ -96,14 +97,7 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
   }
   
   return (
-    <div 
-      id={PLAYER_CONTAINER_ID}
-      className="w-full"
-      style={{ 
-        aspectRatio: '16/9',
-        maxWidth: '100%',
-      }}
-    />
+    <div  id={PLAYER_CONTAINER_ID} />
   );
 };
 

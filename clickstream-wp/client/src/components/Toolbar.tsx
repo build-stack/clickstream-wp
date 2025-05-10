@@ -13,7 +13,7 @@ const Toolbar: React.FC = () => {
     <header className="border-b border-gray-200">
       <div className="px-4 md:px-6 py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <h1 className="text-xl font-bold text-gray-800 mr-8">Clickstream WP</h1>
+          <h1 className="text-xl font-bold text-gray-800 mr-8">Clickstream</h1>
           
           <nav className="hidden md:flex">
             <Link 

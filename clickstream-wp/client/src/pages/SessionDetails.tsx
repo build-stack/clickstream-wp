@@ -86,7 +86,7 @@ const SessionDetails: React.FC = () => {
     }
     
     return (
-      <div className="w-full max-w-full">
+      <div className="w-full max-w-full pt-12">
         <SessionPlayer events={sessionData.events as unknown as eventWithTime[]} />
       </div>
     );

@@ -69,7 +69,7 @@ const Setup: React.FC = () => {
   const isHealthy = data.health_status.live && data.health_status.ready;
 
   return (
-    <Layout title="Setup">
+    <Layout>
       <div className="p-4 md:p-6">
         <p className="mb-4 text-gray-600">Configure your tracking preferences below.</p>
         
