@@ -252,7 +252,7 @@ class Clickstream_WP {
      */
     public static function check_endpoint_health($url, $endpoint) {
         $response = wp_remote_get($url . $endpoint);
-        
+        // var_dump($response, $url, $endpoint);die;
         if (is_wp_error($response)) {
             return false;
         }

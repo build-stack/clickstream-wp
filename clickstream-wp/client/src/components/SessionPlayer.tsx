@@ -13,11 +13,25 @@ interface SessionPlayerProps {
   events: eventWithTime[];
   width?: string | number;
   height?: string | number;
+  showController?: boolean;
+  autoPlay?: boolean;
+  speed?: number;
+  skipInactive?: boolean;
+  showWarning?: boolean;
+  blockClass?: string;
+  liveMode?: boolean;
 }
 
 const SessionPlayer: React.FC<SessionPlayerProps> = ({ 
   events, 
-  width = '100%', 
+  width,
+  showController = true,
+  autoPlay = false,
+  speed = 1,
+  skipInactive = false,
+  showWarning = true,
+  blockClass = 'rr-block',
+  liveMode = false,
 }) => {
   useEffect(() => {
     // First, destroy any existing player
@@ -54,9 +68,15 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
           target: container,
           props: {
             events: events,
-            width: typeof width === 'number' ? width : undefined,
-            showController: true,
-            autoPlay: false,
+            width: 800,
+            showController,
+            autoPlay,
+            speed,
+            skipInactive,
+            showWarning,
+            blockClass,
+            liveMode,
+            UNSAFE_replayCanvas: true,
           }
         });
       } catch (error) {
@@ -69,7 +89,7 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
       // We don't destroy on component unmount - we'll let the next mount handle it
       // This prevents issues with React's StrictMode double-mounting
     };
-  }, [events, width]);
+  }, [events, width, showController, autoPlay, speed, skipInactive, showWarning, blockClass, liveMode]);
 
   if (!events.length) {
     return <div>No events available for replay</div>;
@@ -78,8 +98,10 @@ const SessionPlayer: React.FC<SessionPlayerProps> = ({
   return (
     <div 
       id={PLAYER_CONTAINER_ID}
+      className="w-full"
       style={{ 
-        width
+        aspectRatio: '16/9',
+        maxWidth: '100%',
       }}
     />
   );
