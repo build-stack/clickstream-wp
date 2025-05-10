@@ -1,0 +1,41 @@
+/* Clickstream WP Admin Styles */
+
+#wpfooter {
+  display: none;
+}
+
+#wpcontent {
+  padding-left: 0 !important;
+}
+
+.wrap {
+  min-height: 100%;
+  margin: 0;
+}
+
+#root {
+    min-height: 100%;
+    margin: 0;
+}
+
+#wpbody-content {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  width: calc(100% - 4rem);
+  height: calc(100vh - 32px); /* Default height for larger screens */
+  overflow-y: auto;
+  padding-bottom: 0rem;
+}
+
+.rr-controller {
+    margin: 0rem 1rem;
+    margin-bottom: 1rem;
+    width: calc(100% - 2rem) !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+  #wpbody-content {
+    height: calc(100vh - 46px);
+  }
+}
